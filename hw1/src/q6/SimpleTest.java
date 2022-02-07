@@ -7,7 +7,7 @@ public class SimpleTest {
 
 	@Test
 	public void TestTournament() {
-		int res = q6.Bakery.PIncrement.parallelIncrement(0, 2);
+		int res = q6.Bakery.PIncrement.parallelIncrement(0, 8);
 		assertTrue("Result is " + res + ", expected result is 1200000.", res == 1200000);
 	}
 

@@ -8,7 +8,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class PIncrement implements Runnable{
 	
-	private int c;
 	private static int numIncrements;
 	public static AtomicInteger num = null;
 	

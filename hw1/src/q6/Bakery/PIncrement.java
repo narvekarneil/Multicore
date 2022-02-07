@@ -46,7 +46,7 @@ public class PIncrement implements Runnable{
 		}
 		Instant end = Instant.now();
 		Duration timeElapsed = Duration.between(start, end);
-		System.out.println("Time taken C: "+ timeElapsed.toMillis() +" milliseconds");
+		System.out.println("Time taken A: "+ timeElapsed.toMillis() +" milliseconds");
 		
 		return num;
     }
@@ -56,7 +56,7 @@ public class PIncrement implements Runnable{
 		for ( int i = 0; i < numIncrements; i++ ) {
 			lock.lock(pid);
 			num++;
-			//System.out.println("Num is " + num);
+			System.out.println("Num is " + num);
 			lock.unlock(pid);
 		}		
 	}
