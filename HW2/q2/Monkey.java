@@ -7,12 +7,11 @@ public class Monkey {
 
 	public static ReentrantLock lock = new ReentrantLock();
 	public static Condition ropeFull  = lock.newCondition(); 
-	public static AtomicInteger monkeysOnRope;
-	public static AtomicInteger ropeDirection;
+	public static int monkeysOnRope = 0;
+	public static int ropeDirection = -2; // When nobody is on rope
+	public static boolean kong = false;
 	
     public Monkey() {
-    	monkeysOnRope = new AtomicInteger(0);
-    	ropeDirection = new AtomicInteger(-1);
 
     }
 
@@ -20,14 +19,26 @@ public class Monkey {
     	
     	// Check
     	lock.lock();
-    	System.out.println("HERE");
-    	// Failed condition, too many monkeys or rope direction is wrong away
-    	while ( monkeysOnRope.get() >= 3 || ropeDirection.get() != direction ) {
-    		ropeFull.await();
+    	
+    	// Kong
+    	if ( direction == -1 ) {
+    		kong = true;
+    		// Wait if monkeys are on rope
+    		while ( monkeysOnRope > 0 ) {
+    			ropeFull.await();
+    		}
+    		kong = false;
+    	} else {
+	    	// Failed condition, too many monkeys or rope direction is wrong away
+	    	while ( monkeysOnRope  >= 3 
+	    			// Wait if given direction is not -2 (free) or myDirection
+	    			|| ( ropeDirection  != direction && ropeDirection != -2 ) 
+	    			|| kong ) {
+	    		ropeFull.await();
+	    	}
     	}
-    	System.out.print(direction);
-    	ropeDirection.set(direction);
-    	monkeysOnRope.incrementAndGet();
+    	ropeDirection = direction;
+    	monkeysOnRope++;
     	
     	lock.unlock();
     	
@@ -38,10 +49,10 @@ public class Monkey {
     	
     	// If you are the last monkey to leave rope, set direction to -1
     	lock.lock();
-    	if ( monkeysOnRope.decrementAndGet() == 0 ) {
-    		ropeDirection.set(-1);
+    	monkeysOnRope--;
+    	if ( monkeysOnRope == 0 ) {
+    		ropeDirection = -2;
     	}
-    	System.out.println("leaving");
     	ropeFull.signalAll();
     	lock.unlock();
     	
@@ -58,7 +69,7 @@ public class Monkey {
      * case 2: when Kong is on the rope, this value should be 1
      */
     public int getNumMonkeysOnRope() {
-    	return monkeysOnRope.get();
+    	return monkeysOnRope;
     }
 
 }
