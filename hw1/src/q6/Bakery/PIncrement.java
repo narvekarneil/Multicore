@@ -56,7 +56,7 @@ public class PIncrement implements Runnable{
 		for ( int i = 0; i < numIncrements; i++ ) {
 			lock.lock(pid);
 			num++;
-			System.out.println("Num is " + num);
+			//System.out.println("Num is " + num);
 			lock.unlock(pid);
 		}		
 	}
