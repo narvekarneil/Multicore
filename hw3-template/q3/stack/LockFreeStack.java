@@ -16,6 +16,7 @@ public class LockFreeStack implements MyStack {
 	   Node oldTop = top.get();
 	   node.next = oldTop;
 	   if (top.compareAndSet(oldTop, node)) {
+		   //System.out.println("push: " + value);
 		   return true;
 	   }
 	   else{
@@ -32,6 +33,7 @@ public class LockFreeStack implements MyStack {
 	    Integer val = oldTop.value;
 	    Node newTop = oldTop.next;
 	    if(top.compareAndSet(oldTop, newTop)) {
+	    	//System.out.println("pop: " + val);
 	    	return val;
 	    }
 	    else {
